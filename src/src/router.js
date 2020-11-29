@@ -1,8 +1,9 @@
-import Home from './components/Home.vue'
-import Page1 from './components/Page1.vue'
-import Page2 from './components/Page2.vue'
-import Page3 from './components/Page3.vue'
-import Page4 from './components/Page4.vue'
+import Home from './pages/Home.vue'
+import Page1 from './pages/Page1.vue'
+import Page2 from './pages/Page2.vue'
+import Page3 from './pages/Page3.vue'
+import Page4 from './pages/Page4.vue'
+// import Header from './components/Header.vue'
 
 const routers = [
     {

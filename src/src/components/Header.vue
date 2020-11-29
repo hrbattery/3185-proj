@@ -1,0 +1,35 @@
+<template>
+  <v-toolbar max-height="64px">
+    <!-- <v-app-bar-nav-icon></v-app-bar-nav-icon> -->
+    <v-toolbar-title><router-link to="/">Home Page</router-link></v-toolbar-title>
+    <!-- <v-toolbar-items v-for="name in headerTitles" :key="name">{{name}}</v-toolbar-items> -->
+    <v-toolbar-items>
+      <v-btn text v-for="name in headerTitles" :key="name"><router-link :to="`p${headerTitles.indexOf(name)+1}`">{{name}}</router-link></v-btn>
+    </v-toolbar-items>
+    <v-spacer></v-spacer>
+    <v-btn icon>
+      <router-link to="home">
+        <v-icon>mdi-information</v-icon>
+      </router-link>
+    </v-btn>
+  </v-toolbar>
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+      headerTitles: [
+        'Introduction',
+        'Image restoration',
+        'Style modification',
+        'Motion detection'
+      ]
+    }
+  }
+}
+</script>
+
+<style>
+
+</style>

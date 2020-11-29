@@ -16,7 +16,7 @@
       </v-btn>
     </v-app-bar>
 
-    <v-main>
+    <v-main id='main'>
       <h1>Title for our Project</h1>
       <v-container align-center style="width:40%;">
         <v-row>
@@ -53,3 +53,9 @@
     }
   }
 </script>
+
+<style>
+#main {
+  margin-top:2%
+}
+</style>
