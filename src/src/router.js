@@ -3,6 +3,7 @@ import Page1 from './pages/Page1.vue'
 import Page2 from './pages/Page2.vue'
 import Page3 from './pages/Page3.vue'
 import Page4 from './pages/Page4.vue'
+import About from './pages/About.vue'
 // import Header from './components/Header.vue'
 
 const routers = [
@@ -34,6 +35,11 @@ const routers = [
         path: '/p4',
         name: 'page4',
         component: Page4,
+    },
+    {
+        path: '/about',
+        name: 'about',
+        component: About,
     }
 ]
 

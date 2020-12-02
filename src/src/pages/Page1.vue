@@ -34,7 +34,10 @@
       <p>
         Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nihil repellendus distinctio similique
       </p>
-      <iframe src="https://www.baidu.com/s?ie=UTF-8&wd=iframe%20%E5%85%B6%E5%AE%83%E7%BD%91%E7%AB%99" frameBorder=0 marginwidth=0 marginheight=0 height=1000 width=1000 ALLOWTRANSPARENCY="true"/>
+      <!--iframe src="https://xbeibeix.com/api/bilibili/biliplayer/?url=BV174411Q7ct" frameBorder=0 marginwidth=0 marginheight=0 height=100% width=100% ALLOWTRANSPARENCY="true"/-->
+      <div style="position: relative; padding: 30% 45%;">
+        <iframe src="//player.bilibili.com/player.html?aid=63317234&bvid=BV174411Q7ct&cid=109958403&page=1&high_quality=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true" style="position: absolute; width: 100%; height: 100%; left: 0; top: 0;"> </iframe>
+      </div>
       </div>
       </v-container>
     </v-main>

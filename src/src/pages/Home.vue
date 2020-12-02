@@ -5,14 +5,23 @@
     >
       <!-- <v-app-bar-nav-icon></v-app-bar-nav-icon> -->
 
-      <v-toolbar-title>Home Page</v-toolbar-title>
+      <v-toolbar-title>
+        <v-btn icon>
+          <router-link to="/">
+            <v-icon>mdi-home</v-icon>
+          </router-link>
+        </v-btn>
+      </v-toolbar-title>
 
       <v-spacer></v-spacer>
 
       <v-btn icon>
-        <router-link to="home">
+        <router-link to="about">
           <v-icon>mdi-information</v-icon>
         </router-link>
+      </v-btn>
+      <v-btn icon>
+        <v-icon @click="darkModeTrigger">mdi-theme-light-dark</v-icon>
       </v-btn>
     </v-app-bar>
 
