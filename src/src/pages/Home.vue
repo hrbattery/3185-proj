@@ -24,7 +24,9 @@
         <v-icon @click="darkModeTrigger">mdi-theme-light-dark</v-icon>
       </v-btn>
     </v-app-bar>
-
+    <transition name="fade">
+      <div v-if="displayBackground" :style="backgroundStyle" id="background"></div>
+    </transition>
     <v-main id='main'>
       <h1>Title for our Project</h1>
       <v-container align-center style="width:40%;">
@@ -37,7 +39,7 @@
           >
             <router-link :to="`p${n}`">
             
-              <v-card :hover="true">
+              <v-card :hover="true" @mouseover="mouseover(n)" @mouseleave="mouseleave()"> 
                 <v-card-text>
                   {{headerTitles[n-1]}}
                 </v-card-text>
@@ -52,6 +54,7 @@
           </v-col>
         </v-row>
       </v-container>
+      
     </v-main>
   </v-app>
 </template>
@@ -65,26 +68,49 @@
           'Image Restoration',
           'Style Transfer',
           'Motion Detection'
-        ]
+        ],
+        displayBackground: false,
+        backgroundStyle: {
+          backgroundImage:""
+        },
       }
     }, 
     methods: {
       darkModeTrigger() {
         this.$vuetify.theme.dark = !this.$vuetify.theme.dark
       },
-      getImage(n) {
-        return '../assets/images/'+n+'.jpg'
+      mouseover(n) {
+        this.$data.backgroundStyle.backgroundImage = 'url('+encodeURI(require(`../assets/images/${this.$data.headerTitles[n-1]}.jpg`))+')'
+        this.$data.displayBackground = true
+      },
+      mouseleave() {
+        this.$data.displayBackground = false
       }
     },
     mounted () {
-      console.log(this.$refs.cards['1'])
-      this.$refs.cards["1"].text = "Topic 1";
+      // console.log(this.$refs.cards['1'])
+      // this.$refs.cards["1"].text = "Topic 1";
     }
   }
 </script>
 
 <style>
 #main {
-  margin-top:2%
+  margin-top: 2%
+}
+#background {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  filter: blur(4px);
+  z-index:0;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .5s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
 }
 </style>
