@@ -1,7 +1,9 @@
 <template>
   <div id="app">
     <!-- <Home msg="This is the title 4 our Project about CV"/> -->
-    <router-view></router-view>
+    <transition :name="transitionName">
+      <keep-alive><router-view></router-view></keep-alive>
+    </transition>
   </div>
 </template>
 
@@ -10,9 +12,23 @@
 
 export default {
   name: 'App',
+  data() {
+    return {
+      transitionName:''
+    }
+  },
   // components: {
   //   Home
   // }
+  watch: {
+    $route(to, from) {
+      if( to.meta.index < from.meta.index){
+        this.transitionName = 'slide-right';
+      }else{
+        this.transitionName = 'slide-left';
+      }
+    }
+  }
 }
 </script>
 
@@ -33,4 +49,24 @@ a {
 .router-link-active {
   text-decoration: none;
 }
+
+.slide-right-enter-active,
+.slide-right-leave-active,
+.slide-left-enter-active,
+.slide-left-leave-active {
+    will-change: transform;
+    transition: all .3s cubic-bezier(0.1, 0.7, 1.0, 0.1);
+    position: absolute;
+    width:100%;
+    left:0;
+}
+.slide-right-enter,
+.slide-left-leave-active {
+  transform:translateX(-100%);
+}
+.slide-right-leave-active,
+.slide-left-enter {
+  transform:translateX(100%)
+}
+
 </style>
