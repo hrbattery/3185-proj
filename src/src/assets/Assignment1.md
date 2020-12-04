@@ -36,8 +36,6 @@ The parallel odd-even transposition sort will broaden the bandwidth of sort algo
 
 First, the design for sequential version of odd-even transposition sort is simple.
 
-![1570361514422](C:\Users\HRBattery\AppData\Roaming\Typora\typora-user-images\1570361514422.png)
-
 The thought is basically following the principle of odd-even transposition sort, which repeating the odd iteration and even iteration, and export the sorted array when after an iteration, the order of all the elements in the array do not change.
 
 ```c++
@@ -79,8 +77,6 @@ int main(int argv, char* argc[]) {
 ```
 
 Then, base on the same principle, here is the design of parallel odd-even transposition sort. 
-
-![1570364366192](C:\Users\HRBattery\AppData\Roaming\Typora\typora-user-images\1570364366192.png)
 
 1. Divide the main array into several subarrays. The last process would receive more numbers if m does not divide n, and other processes would receive numbers in number m/n. Using `MPI_Send()` to send subarray to all process.
 
@@ -130,8 +126,6 @@ Then, base on the same principle, here is the design of parallel odd-even transp
    
 
 2. implement sequential odd-even transposition sort on all the processes. Here, there are two methods to implement the sort. The first method is treating all the subarrays as several individual arrays, and the second method is still treating subarrays as a part of main arrays. The difference between these two method is, for the first method, all the process will do odd iteration at the same time, and then do even iteration at the same time. But for the second method, some do odd iteration and some might do even iteration at the same time.
-
-   ![1570365026259](C:\Users\HRBattery\AppData\Roaming\Typora\typora-user-images\1570365026259.png)
 
    In this program, I choose the second method. The actual implementation of method 2 is making the actual size array equals to m/n+1. After the swap between different processes, the last element of subarray in process K always equals to the first element of subarray in process K+1. After each iteration of all processes, the root process will use `MPI_Allreduce()` to determine that the whole array is sorted or not, and give back a signal to tell other processes to continue the while loop or not.
 
@@ -229,10 +223,6 @@ void oddEvenSort(int* array, int arraySize, int oddEvenSign, int &swapSign, int 
 
 ##### Result
 
-![1570365991062](C:\Users\HRBattery\AppData\Roaming\Typora\typora-user-images\1570365991062.png)
-
-![1570366497479](C:\Users\HRBattery\AppData\Roaming\Typora\typora-user-images\1570366497479.png)
-
 ##### Performance
 
 The program runs on Ubuntu 18.04.1 LTS, implemented on virtual machine on Windows 10. The computer is equipped with an AMD Ryzen 5 2600X CPU, which is a 6 core 12 thread processor. I adjusted the main index size to 15000, random number range to 0 ~ 50000, using different parameters setting from -n 2 to -n 10. Here is the result. 
@@ -243,10 +233,6 @@ The program runs on Ubuntu 18.04.1 LTS, implemented on virtual machine on Window
 | 2nd     | 0.93       | 0.5  | 0.38 | 0.32 | 0.33 | 0.29 | 248.37 | 342.62 | 441.28 | 507.33 |
 | 3rd     | 0.93       | 0.51 | 0.45 | 0.32 | 0.3  | 0.3  | 248.43 | 343.11 | 441.33 | 506.92 |
 | Avg     | 0.927      | 0.50 | 0.40 | 0.32 | 0.32 | 0.3  | 250.27 | 344.83 | 443.64 | 507.38 |
-
-![1570370229259](C:\Users\HRBattery\AppData\Roaming\Typora\typora-user-images\1570370229259.png)
-
-![1570370310870](C:\Users\HRBattery\AppData\Roaming\Typora\typora-user-images\1570370310870.png)
 
 In fact, the original thought is to test from -n 2 to -n 16. However, a bottleneck occurs at -n 7. When using   -n 10, the running time is more than 500 seconds, so I think it is meaningless to test the remain options.
 

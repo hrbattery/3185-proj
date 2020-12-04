@@ -11,6 +11,6 @@ module.exports = {
       .test(/.md$/)
       .use('markdown-loader')
       .loader('markdown-loader')
-      .loader('html-loader')
+      .loader('text-loader')
   }
 }
