@@ -3,6 +3,8 @@ import VueRouter from 'vue-router'
 import App from './App.vue'
 import routers from './router'
 import vuetify from '@/plugins/vuetify'
+// import 'highlight.js/styles/github.css'
+// import 'github-markdown-css/github-markdown.css'
 Vue.config.productionTip = false
 
 Vue.use(VueRouter)

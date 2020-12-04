@@ -102,7 +102,7 @@
   position: absolute;
   height: 100%;
   width: 100%;
-  filter: blur(4px);
+  filter: blur(4px) brightness(50%);
   z-index:0;
   background-repeat: no-repeat;
   background-size: cover;

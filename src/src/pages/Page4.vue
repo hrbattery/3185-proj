@@ -34,6 +34,12 @@
       <p>
         Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nihil repellendus distinctio similique
       </p>
+      <!-- <div class="markdown-body">
+        <markdown />
+      </div> -->
+      <div>
+        <markdown-it-vue :content="markdown"/>
+      </div>
       </div>
       </v-container>
     </v-main>
@@ -42,6 +48,11 @@
 
 <script>
   import Header from '@/components/Header'
+  import markdown from '@/assets/Assignment1.md'
+  import MarkdownItVue from 'markdown-it-vue'
+  import 'markdown-it-vue/dist/markdown-it-vue.css'
+
+
   export default {
     data() {
       return {
@@ -50,7 +61,8 @@
           'Page2',
           'Page3',
           'Page4'
-        ]
+        ],
+        markdown,
       }
     },
     methods: {
@@ -60,6 +72,8 @@
     },
     components: {
       Header,
+      MarkdownItVue
+      // markdown
     },
     mounted () {
       // console.log(this.$refs.cards['1'])
