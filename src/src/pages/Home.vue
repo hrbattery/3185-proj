@@ -28,7 +28,7 @@
       <div v-if="displayBackground" :style="backgroundStyle" id="background"></div>
     </transition>
     <v-main id='main'>
-      <h1>Title for our Project</h1>
+      <h1>Introduction to Computer Vision</h1>
       <v-container align-center style="width:40%;">
         <v-row>
           <v-col
@@ -54,12 +54,13 @@
           </v-col>
         </v-row>
       </v-container>
-      
     </v-main>
+    <Footer/>
   </v-app>
 </template>
 
 <script>
+  import Footer from '@/components/Footer'
   export default {
     data() {
       return {
@@ -87,6 +88,9 @@
         this.$data.displayBackground = false
       }
     },
+    components: {
+      Footer,
+    },
     mounted () {
       // console.log(this.$refs.cards['1'])
       // this.$refs.cards["1"].text = "Topic 1";
@@ -96,7 +100,8 @@
 
 <style>
 #main {
-  margin-top: 2%
+  margin-top: 2%;
+  margin-bottom: 5%
 }
 #background {
   position: absolute;
