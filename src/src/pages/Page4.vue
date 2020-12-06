@@ -73,7 +73,6 @@
     components: {
       Header,
       // MarkdownItVue
-      // markdown
     },
     mounted () {
       // console.log(this.$refs.cards['1'])
