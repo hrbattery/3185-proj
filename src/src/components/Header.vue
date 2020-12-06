@@ -31,8 +31,8 @@ export default {
     return {
       headerTitles: [
         'Introduction',
-        'Image restoration',
-        'Style modification',
+        'Image Inpainting',
+        'Style Transfer',
         'Motion detection'
       ]
     }
@@ -40,7 +40,6 @@ export default {
   methods: {
     darkModeTrigger() {
       this.$vuetify.theme.dark = !this.$vuetify.theme.dark
-      console.log(1)
     }
   }
 }

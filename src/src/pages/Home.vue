@@ -24,9 +24,11 @@
         <v-icon @click="darkModeTrigger">mdi-theme-light-dark</v-icon>
       </v-btn>
     </v-app-bar>
-
+    <transition name="fade">
+      <div v-if="displayBackground" :style="backgroundStyle" id="background"></div>
+    </transition>
     <v-main id='main'>
-      <h1>Title for our Project</h1>
+      <h1>Introduction to Computer Vision</h1>
       <v-container align-center style="width:40%;">
         <v-row>
           <v-col
@@ -36,35 +38,84 @@
             ref="cards"
           >
             <router-link :to="`p${n}`">
-              <v-card height="200" hover=True>
+            
+              <v-card :hover="true" @mouseover="mouseover(n)" @mouseleave="mouseleave()"> 
                 <v-card-text>
-                  Topic{{n}}
+                  {{headerTitles[n-1]}}
                 </v-card-text>
+                <v-img
+                :src="require(`../assets/images/${headerTitles[n-1]}.jpg`)"
+                :aspect-ratio="16/9"
+                alt=""
+                ></v-img>
               </v-card>
+            
             </router-link>
           </v-col>
         </v-row>
       </v-container>
     </v-main>
+    <Footer/>
   </v-app>
 </template>
 
 <script>
+  import Footer from '@/components/Footer'
   export default {
+    data() {
+      return {
+        headerTitles: [
+          'Introduction',
+          'Image Inpainting',
+          'Style Transfer',
+          'Motion Detection'
+        ],
+        displayBackground: false,
+        backgroundStyle: {
+          backgroundImage:""
+        },
+      }
+    }, 
     methods: {
-      test() {
-        this.$refs.cards["1"].text = "Topic 1";
+      darkModeTrigger() {
+        this.$vuetify.theme.dark = !this.$vuetify.theme.dark
+      },
+      mouseover(n) {
+        this.$data.backgroundStyle.backgroundImage = 'url('+encodeURI(require(`../assets/images/${this.$data.headerTitles[n-1]}.jpg`))+')'
+        this.$data.displayBackground = true
+      },
+      mouseleave() {
+        this.$data.displayBackground = false
       }
     },
+    components: {
+      Footer,
+    },
     mounted () {
-      console.log(this.$refs.cards['1'])
-      this.$refs.cards["1"].text = "Topic 1";
+      // console.log(this.$refs.cards['1'])
+      // this.$refs.cards["1"].text = "Topic 1";
     }
   }
 </script>
 
 <style>
 #main {
-  margin-top:2%
+  margin-top: 2%;
+  margin-bottom: 5%
+}
+#background {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  filter: blur(4px) brightness(50%);
+  z-index:0;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .5s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
 }
 </style>
