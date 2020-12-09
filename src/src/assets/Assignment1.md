@@ -1,386 +1,130 @@
-# CSC4005 Distributed and Parallel Computing
+# Moving object detection
 
-### Project 1 Parallel Odd-Even Transposition Sort
+Moving object detection is a technique used in computer vision and image processing. Multiple consecutive frames from a video are compared by various methods to determine if any moving object is detected.
 
-#### Zeng Lewei (117010366) 2019-10-06
+Moving objects detection has been used for wide range of applications like video surveillance, activity recognition, road condition monitoring, airport safety, monitoring of protection along marine border, etc.
 
+1. Definition
+2. Object Detection
+3. Video Tracking
+4. Motion Estimation
+5. Methods of Moving Objects Detection
 
+### Definition
 
-##### Introduction
+Moving object detection is to recognize the physical movement of an object in a given place or region. By acting segmentation among moving objects and stationary area or region, the moving objects motion could be tracked and thus could be analyzed later. To achieve this, consider a video is a structure built upon single frames, moving object detection is to find the foreground moving target(s), either in each video frame or only when the moving target show the first appearance in the video.
 
-In this project, a parallel odd-even transposition sort is implemented with MPI. A ordinary odd-even transposition sort is performed as follow:
+### Object Detection
 
-- Compare the odd element with next even element in odd iteration, or the even element with next odd element in even iteration respectively. Swap the elements if the previous one is larger.
+*Objects detected with OpenCV's Deep Neural Network module (DNN) by using a YOLOv3 model trained on COCO dataset capable to detect objects of 80 common classes.*
+Object detection is a computer technology related to computer vision and image processing that deals with detecting instances of semantic objects of a certain class (such as humans, buildings, or cars) in digital images and videos. Well-researched domains of object detection include face detection and pedestrian detection. Object detection has applications in many areas of computer vision, including image retrieval and video surveillance.
 
-- Repeat the operation until the numbers are sorted.
+#### Uses
 
-In the parallel version, it works as follow:
+It is widely used in computer vision tasks such as image annotation, activity recognition, face detection, face recognition, video object co-segmentation. It is also used in tracking objects, for example tracking a ball during a football match, tracking movement of a cricket bat, or tracking a person in a video.
 
-(Initially, m numbers are distributed to n processes, respectively.)
-$$
-a\cdot c = \gamma
-$$
+#### Concept
 
+Every object class has its own special features that helps in classifying the class – for example all circles are round. Object class detection uses these special features. For example, when looking for circles, objects that are at a particular distance from a point (i.e. the center) are sought. Similarly, when looking for squares, objects that are perpendicular at corners and have equal side lengths are needed. A similar approach is used for face identification where eyes, nose, and lips can be found and features like skin color and distance between eyes can be found.
 
-- Divide the array into subarrays, and each process do the first step of ordinary odd-even transposition sort.
-- If the current process rank is P, and there some elements that are left over
-  for comparison in step 1, compare the boundary elements with process with
-  rank P-1 and P+1. If the posterior element is smaller, swaps them.
-- Repeat the operations until the number are sorted.
+#### Methods
 
-The parallel odd-even transposition sort will broaden the bandwidth of sort algorithm, but will bring extra communication time between processes. We will see both effect of them in the report.
+*Comparison of speed and accuracy of various detectors on Microsoft COCO testdev dataset http://mscoco.org (All values are found in https://arxiv.org articles by the authors of these algorithms)*
 
+Methods for object detection generally fall into either machine learning-based approaches or deep learning-based approaches. For Machine Learning approaches, it becomes necessary to first define features using one of the methods below, then using a technique such as support vector machine (SVM) to do the classification. On the other hand, deep learning techniques are able to do end-to-end object detection without specifically defining features, and are typically based on convolutional neural networks (CNN).
 
+- Machine learning approaches:
+  - Viola–Jones object detection framework based on Haar features
+  - Scale-invariant feature transform (SIFT)
+  - Histogram of oriented gradients (HOG) features
+- Deep learning approaches:
+  - Region Proposals (R-CNN, Fast R-CNN, Faster R-CNN, cascade R-CNN.)
+  - Single Shot MultiBox Detector (SSD) 
+  - You Only Look Once (YOLO) 
+  - Single-Shot Refinement Neural Network for Object Detection (RefineDet) 
+  - Retina-Net
+  - Deformable convolutional networks
 
-##### Design
+### Video Tracking
 
-First, the design for sequential version of odd-even transposition sort is simple.
+Video tracking is the process of locating a moving object (or multiple objects) over time using a camera. It has a variety of uses, some of which are: human-computer interaction, security and surveillance, video communication and compression, augmented reality, traffic control, medical imaging and video editing. Video tracking can be a time-consuming process due to the amount of data that is contained in video. Adding further to the complexity is the possible need to use object recognition techniques for tracking, a challenging problem in its own right.
 
-The thought is basically following the principle of odd-even transposition sort, which repeating the odd iteration and even iteration, and export the sorted array when after an iteration, the order of all the elements in the array do not change.
+#### Objective
 
-```c++
-void oddEvenSort(int* array, int arraySize, int oddEvenSign, int &swapSign) {
-    swapSign = 0;
-    for (int i = oddEvenSign; i < arraySize-1; i += 2) {
-        if (array[i] > array[i+1]) {
-            std::swap(array[i], array[i+1]);
-            swapSign = 1;
-        }
-    }
-}
+The objective of video tracking is to associate target objects in consecutive video frames. The association can be especially difficult when the objects are moving fast relative to the frame rate. Another situation that increases the complexity of the problem is when the tracked object changes orientation over time. For these situations video tracking systems usually employ a motion model which describes how the image of the target might change for different possible motions of the object.
 
-int main(int argv, char* argc[]) {
-    const int mainArraySize = 15000;
-    const int randomRange = 20000;
-    int mainArray[mainArraySize];
-    for (int i = 0; i < mainArraySize; i++) {
-        mainArray[i] = random(randomRange);
-        std::cout << mainArray[i] << " " ;
-    }
-    int sortSign = 0; // 0 = odd, 1 = even
-    int changeSign = 1; // 0 = array no changed, 1 = array changed
-    while (changeSign) {
-        changeSign = 0;
-        if (sortSign == 0) {
-            oddEvenSort(mainArray, mainArraySize, 0, changeSign);
-        }
-        else {
-            oddEvenSort(mainArray, mainArraySize, 1, changeSign);
-        }
-        sortSign = !sortSign;
-    }
-    for (int i = 0; i < mainArraySize; i++) {
-        std::cout << mainArray[i] << " " ;
-    }
-    std::cout << "\n";
-}
-```
+Examples of simple motion models are:
 
-Then, base on the same principle, here is the design of parallel odd-even transposition sort. 
+- When tracking planar objects, the motion model is a 2D transformation (affine transformation or homography) of an image of the object (e.g. the initial frame).
+- When the target is a rigid 3D object, the motion model defines its aspect depending on its 3D position and orientation.
+- For video compression, key frames are divided into macroblocks. The motion model is a disruption of a key frame, where each macroblock is translated by a motion vector given by the motion parameters.
+- The image of deformable objects can be covered with a mesh, the motion of the object is defined by the position of the nodes of the mesh.
 
-1. Divide the main array into several subarrays. The last process would receive more numbers if m does not divide n, and other processes would receive numbers in number m/n. Using `MPI_Send()` to send subarray to all process.
+#### Algorithms
 
-   ```c++
-   const int mainArraySize = 20;
-   const int randomRange = 20000;
-   double start_time, end_time;
-   
-   // initialize MPI processes
-   int rank, size;
-   MPI_Init(&argv, &argc);
-   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-   MPI_Comm_size(MPI_COMM_WORLD, &size);
-   
-   // master process create main array
-   int mainArray[mainArraySize];
-   if (rank == 0) {
-       for (int i = 0; i < mainArraySize; i++) {
-           mainArray[i] = random(randomRange);
-       }
-       start_time = MPI_Wtime();
-       for (int i = 1; i < size; i++) {
-           MPI_Send(mainArray, mainArraySize, MPI_INT, i, 0, MPI_COMM_WORLD);
-       }
-   }
-   else {
-       MPI_Recv(mainArray, mainArraySize, MPI_INT, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-   }
-   
-   // create subarray of each process
-   int subArraySize = mainArraySize / size + 1;
-   int subArray[subArraySize];
-   int indexHead = rank * (subArraySize - 1);
-   if (rank != size -1) {
-       for (int i = 0; i < subArraySize; i++) {
-           subArray[i] = mainArray[i+indexHead];
-       }
-   }
-   else {
-       subArraySize = mainArraySize - (size - 1) * (subArraySize - 1);
-       for (int i = 0; i < subArraySize; i++) {
-           subArray[i] = mainArray[i+indexHead];
-       }
-   }
-   ```
+To perform video tracking an algorithm analyzes sequential video frames and outputs the movement of targets between the frames. There are a variety of algorithms, each having strengths and weaknesses. Considering the intended use is important when choosing which algorithm to use. There are two major components of a visual tracking system: target representation and localization, as well as filtering and data association.
 
-   
+Target representation and localization is mostly a bottom-up process. These methods give a variety of tools for identifying the moving object. Locating and tracking the target object successfully is dependent on the algorithm. For example, using blob tracking is useful for identifying human movement because a person's profile changes dynamically. Typically the computational complexity for these algorithms is low. The following are some common target representation and localization algorithms:
 
-2. implement sequential odd-even transposition sort on all the processes. Here, there are two methods to implement the sort. The first method is treating all the subarrays as several individual arrays, and the second method is still treating subarrays as a part of main arrays. The difference between these two method is, for the first method, all the process will do odd iteration at the same time, and then do even iteration at the same time. But for the second method, some do odd iteration and some might do even iteration at the same time.
+- Kernel-based tracking (mean-shift tracking): an iterative localization procedure based on the maximization of a similarity measure (Bhattacharyya coefficient).
+- Contour tracking: detection of object boundary (e.g. active contours or Condensation algorithm). Contour tracking methods iteratively evolve an initial contour initialized from the previous frame to its new position in the current frame. This approach to contour tracking directly evolves the contour by minimizing the contour energy using gradient descent.
 
-   In this program, I choose the second method. The actual implementation of method 2 is making the actual size array equals to m/n+1. After the swap between different processes, the last element of subarray in process K always equals to the first element of subarray in process K+1. After each iteration of all processes, the root process will use `MPI_Allreduce()` to determine that the whole array is sorted or not, and give back a signal to tell other processes to continue the while loop or not.
+Filtering and data association is mostly a top-down process, which involves incorporating prior information about the scene or object, dealing with object dynamics, and evaluation of different hypotheses. These methods allow the tracking of complex objects along with more complex object interaction like tracking objects moving behind obstructions. Additionally the complexity is increased if the video tracker (also named TV tracker or target tracker) is not mounted on rigid foundation (on-shore) but on a moving ship (off-shore), where typically an inertial measurement system is used to pre-stabilize the video tracker to reduce the required dynamics and bandwidth of the camera system. The computational complexity for these algorithms is usually much higher. The following are some common filtering algorithms:
 
-```c++
-void oddEvenSort(int* array, int arraySize, int oddEvenSign, int &swapSign, int &headChangeSign) {
-    swapSign = 0;
-    for (int i = oddEvenSign; i < arraySize-1; i += 2) {
-        if (array[i] > array[i+1]) {
-            std::swap(array[i], array[i+1]);
-            swapSign = 1;
-            if (i == 0) {
-                headChangeSign = 1;
-            }
-        }
-    }
-}
+- Kalman filter: an optimal recursive Bayesian filter for linear functions subjected to Gaussian noise. It is an algorithm that uses a series of measurements observed over time, containing noise (random variations) and other inaccuracies, and produces estimates of unknown variables that tend to be more precise than those based on a single measurement alone.
+- Particle filter: useful for sampling the underlying state-space distribution of nonlinear and non-Gaussian processes.
 
-...
-    
-// sorting
-    int sortSign = 0; // 0 = odd, 1 = even
-    int swapSign = 1; // 0 = array no changed, 1 = array changed
-    int swapBuf = 0; // buffer for swap signal
-    int recieveBuf; // buffer for swapped element from previous process; 
-    int headChangeSign; // signal that indicate the head on this process was changed or not
-    while (swapSign) {
-        swapSign = 0;
-        headChangeSign = 0;
-        if ((sortSign == 0 && (indexHead % 2 == 0)) || (sortSign == 1 && (indexHead % 2 != 0))) {
-            oddEvenSort(subArray, subArraySize, 0, swapSign, headChangeSign);
-        }
-        else {
-            oddEvenSort(subArray, subArraySize, 1, swapSign, headChangeSign);
-        }
-        if (rank != size - 1) {
-            MPI_Send(&subArray[subArraySize-1], 1, MPI_INT, rank+1, 1, MPI_COMM_WORLD);
-        }
-        if (rank != 0) {
-            MPI_Recv(&recieveBuf, 1, MPI_INT, rank-1, 1, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-            if ((recieveBuf != subArray[0]) && headChangeSign != 1) {
-		        subArray[0] = recieveBuf;
-                swapSign = 1;
-            }
-            MPI_Send(&subArray[0], 1, MPI_INT, rank-1, 2, MPI_COMM_WORLD);
-        }
-        if (rank != size - 1) {
-            MPI_Recv(&recieveBuf, 1, MPI_INT, rank+1, 2, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-            subArray[subArraySize-1] = recieveBuf;
-        }
-        MPI_Allreduce(&swapSign, &swapBuf, 1, MPI_INT, MPI_LOR, MPI_COMM_WORLD);
-        swapSign = swapBuf;
-        sortSign = !sortSign;
-    }
-```
+### Motion estimation
 
-3. After the whole array is sorted, collected all the subarrays into root process.
+Motion estimation is the process of determining motion vectors that describe the transformation from one 2D image to another; usually from adjacent frames in a video sequence. It is an ill-posed problem as the motion is in three dimensions but the images are a projection of the 3D scene onto a 2D plane. The motion vectors may relate to the whole image (global motion estimation) or specific parts, such as rectangular blocks, arbitrary shaped patches or even per pixel. The motion vectors may be represented by a translational model or many other models that can approximate the motion of a real video camera, such as rotation and translation in all three dimensions and zoom.
 
-   ```c++
-   if (rank != 0) {
-           MPI_Send(subArray, subArraySize, MPI_INT, 0, 3, MPI_COMM_WORLD);
-       }
-       else {
-           int subBuf[mainArraySize - (size - 1) * (subArraySize - 1)];
-           for (int i = 0; i < subArraySize-1; i++) {
-               mainArray[i] = subArray[i];
-           }
-           for (int i = 1; i < size-1; i++) {
-               MPI_Recv(subArray, subArraySize, MPI_INT, i, 3, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-               for (int j = 0; j < subArraySize-1; j++) {
-                   mainArray[j+i*(subArraySize - 1)] = subArray[j];
-               }
-           }
-           MPI_Recv(subBuf, mainArraySize - (size - 1) * (subArraySize - 1), MPI_INT, size-1, 3, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-           for (int j = 0; j < mainArraySize - (size - 1) * (subArraySize - 1); j++) {
-               mainArray[j+(size-1)*(subArraySize - 1)] = subBuf[j];
-           }
-           end_time = MPI_Wtime();
-           for (int i = 0; i < mainArraySize; i++) {
-               std::cout << mainArray[i] << " " ;//for test
-           }
-           std::cout << "\n";//for test
-   
-           // auther declaration
-           printf("Name: Zeng Lewei\n");
-           printf("student ID: 117010366\n");
-           printf("Assignment 1: Parallel Odd-Even Transposition Sort\n");
-           printf("Execute time: %.2lf seconds\n", end_time - start_time);
-       }
-   
-       MPI_Finalize();
-   
-   	return 0;
-   }   
-   ```
+#### Related terms
 
-##### Result
+More often than not, the term motion estimation and the term optical flow are used interchangeably. It is also related in concept to image registration and stereo correspondence. In fact all of these terms refer to the process of finding corresponding points between two images or video frames. The points that correspond to each other in two views (images or frames) of a real scene or object are "usually" the same point in that scene or on that object. Before we do motion estimation, we must define our measurement of correspondence, i.e., the matching metric, which is a measurement of how similar two image points are. There is no right or wrong here; the choice of matching metric is usually related to what the final estimated motion is used for as well as the optimisation strategy in the estimation process.
 
-##### Performance
+#### Algorithms
 
-The program runs on Ubuntu 18.04.1 LTS, implemented on virtual machine on Windows 10. The computer is equipped with an AMD Ryzen 5 2600X CPU, which is a 6 core 12 thread processor. I adjusted the main index size to 15000, random number range to 0 ~ 50000, using different parameters setting from -n 2 to -n 10. Here is the result. 
+The methods for finding motion vectors can be categorised into pixel based methods ("direct") and feature based methods ("indirect"). A famous debate resulted in two papers from the opposing factions being produced to try to establish a conclusion.
 
-| time(s) | sequential | -n 2 | -n 3 | -n 4 | -n 5 | -n 6 | -n 7   | -n 8   | -n 9   | -n 10  |
-| ------- | ---------- | ---- | ---- | ---- | ---- | ---- | ------ | ------ | ------ | ------ |
-| 1st     | 0.92       | 0.5  | 0.38 | 0.33 | 0.33 | 0.3  | 254.02 | 348.75 | 448.32 | 507.89 |
-| 2nd     | 0.93       | 0.5  | 0.38 | 0.32 | 0.33 | 0.29 | 248.37 | 342.62 | 441.28 | 507.33 |
-| 3rd     | 0.93       | 0.51 | 0.45 | 0.32 | 0.3  | 0.3  | 248.43 | 343.11 | 441.33 | 506.92 |
-| Avg     | 0.927      | 0.50 | 0.40 | 0.32 | 0.32 | 0.3  | 250.27 | 344.83 | 443.64 | 507.38 |
+##### Direct methods
 
-In fact, the original thought is to test from -n 2 to -n 16. However, a bottleneck occurs at -n 7. When using   -n 10, the running time is more than 500 seconds, so I think it is meaningless to test the remain options.
+- Block-matching algorithm
+- Phase correlation and frequency domain methods
+- Pixel recursive algorithms
+- Optical flow
 
-The reason for the phenomenon is when the process number is larger than the number of core of processor, at least one core must handle more than one process. And in reality, this parallel sort method has the same time complexity (O(n^2)) as sequential version. When a core handle more than one process, it must execute them sequentially, and for other processes, they must wait for the processes haven't be executed. This resulting a worse performance.
+##### Indirect methods
 
-Of course, when using less than or equal to 6 processes, the performance for parallel sorting is better than sequential sorting. During each round of sorting, each process must block and wait for swapping element with another process, and it takes communication time. But the two method has the same time complexity, and for each processes in parallel sorting, the number of elements n is much smaller than the sequential one. The time complexity for communication between process is O(n), which is better than O(n^2), and this is the reason for the result.
+Indirect methods use features, such as corner detection, and match corresponding features between frames, usually with a statistical function applied over a local or global area. The purpose of the statistical function is to remove matches that do not correspond to the actual motion.
 
-##### Conclusion
+Statistical functions that have been successfully used include RANSAC.
 
-In this experiment, the parallel sort is successfully implemented using MPI. The performance of parallel sort is much better than sequential sort when the data is large and the number of processes is more than 2 and less than the number of core of processor.
+##### Additional note on the categorization
 
-##### Experience
+It can be argued that almost all methods require some kind of definition of the matching criteria. The difference is only whether you summarise over a local image region first and then compare the summarisation (such as feature based methods), or you compare each pixel first (such as squaring the difference) and then summarise over a local image region (block base motion and filter based motion). An emerging type of matching criteria summarises a local image region first for every pixel location (through some feature transform such as Laplacian transform), compares each summarised pixel and summarises over a local image region again. Some matching criteria have the ability to exclude points that do not actually correspond to each other albeit producing a good matching score, others do not have this ability, but they are still matching criteria.
 
-It is important to know the MPI functions, including the block mode of send and receive messages and the work principle of collective communications like `MPI_Reduce()` and `MPI_Allreduce()`, but the most important is to think with parallel thought. With MPI, only one part can implement parallel computing, and I can't using MPI functions after `MPI_Finalize()`. Therefore, I have to consider about what things have to be done in the parallel part. In the other hand, to consider about communication between processes is difficult. I have to consider about what messages must be sent and what are not necessary, which will help saving execution time.
+#### Applications
 
-##### Source Code
+##### Video coding
 
-```c++
-#include "mpi.h"
-#include <iostream>
-#include <cstdio>
-#include <cstdlib>
-#include <unistd.h>
-#define random(x) (rand()%x) 
+Applying the motion vectors to an image to synthesize the transformation to the next image is called motion compensation. It is most easily applied to discrete cosine transform (DCT) based video coding standards, because the coding is performed in blocks.
 
-void oddEvenSort(int* array, int arraySize, int oddEvenSign, int &swapSign, int &headChangeSign) {
-    swapSign = 0;
-    for (int i = oddEvenSign; i < arraySize-1; i += 2) {
-        if (array[i] > array[i+1]) {
-            std::swap(array[i], array[i+1]);
-            swapSign = 1;
-            if (i == 0) {
-                headChangeSign = 1;
-            }
-        }
-    }
-}
+As a way of exploiting temporal redundancy, motion estimation and compensation are key parts of video compression. Almost all video coding standards use block-based motion estimation and compensation such as the MPEG series including the most recent HEVC.
 
-int main(int argv, char* argc[]) {
-    const int mainArraySize = 20;
-    const int randomRange = 20000;
-	double start_time, end_time;
-    // initialize MPI processes
-    int rank, size;
-    MPI_Init(&argv, &argc);
-    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-	MPI_Comm_size(MPI_COMM_WORLD, &size);
-    // master process create main array
-    int mainArray[mainArraySize];
-    if (rank == 0) {
-        for (int i = 0; i < mainArraySize; i++) {
-            mainArray[i] = random(randomRange);
-        }
-        start_time = MPI_Wtime();
-        for (int i = 1; i < size; i++) {
-            MPI_Send(mainArray, mainArraySize, MPI_INT, i, 0, MPI_COMM_WORLD);
-        }
-    }
-    else {
-        MPI_Recv(mainArray, mainArraySize, MPI_INT, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-    }
+##### 3D reconstruction
 
-    // create subarray of each process
-    int subArraySize = mainArraySize / size + 1;
-    int subArray[subArraySize];
-    int indexHead = rank * (subArraySize - 1);
-    if (rank != size -1) {
-        for (int i = 0; i < subArraySize; i++) {
-            subArray[i] = mainArray[i+indexHead];
-        }
-    }
-    else {
-        subArraySize = mainArraySize - (size - 1) * (subArraySize - 1);
-        for (int i = 0; i < subArraySize; i++) {
-            subArray[i] = mainArray[i+indexHead];
-        }
-    }
+In simultaneous localization and mapping, a 3D model of a scene is reconstructed using images from a moving camera.
 
-    // sorting
-    int sortSign = 0; // 0 = odd, 1 = even
-    int swapSign = 1; // 0 = array no changed, 1 = array changed
-    int swapBuf = 0; // buffer for swap signal
-    int recieveBuf; // buffer for swapped element from previous process; 
-    int headChangeSign; // signal that indicate the head on this process was changed or not
-    while (swapSign) {
-        swapSign = 0;
-        headChangeSign = 0;
-        if ((sortSign == 0 && (indexHead % 2 == 0)) || (sortSign == 1 && (indexHead % 2 != 0))) {
-            oddEvenSort(subArray, subArraySize, 0, swapSign, headChangeSign);
-        }
-        else {
-            oddEvenSort(subArray, subArraySize, 1, swapSign, headChangeSign);
-        }
-        if (rank != size - 1) {
-            MPI_Send(&subArray[subArraySize-1], 1, MPI_INT, rank+1, 1, MPI_COMM_WORLD);
-        }
-        if (rank != 0) {
-            MPI_Recv(&recieveBuf, 1, MPI_INT, rank-1, 1, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-            if ((recieveBuf != subArray[0]) && headChangeSign != 1) {
-		        subArray[0] = recieveBuf;
-                swapSign = 1;
-            }
-            MPI_Send(&subArray[0], 1, MPI_INT, rank-1, 2, MPI_COMM_WORLD);
-        }
-        if (rank != size - 1) {
-            MPI_Recv(&recieveBuf, 1, MPI_INT, rank+1, 2, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-            subArray[subArraySize-1] = recieveBuf;
-        }
-        MPI_Allreduce(&swapSign, &swapBuf, 1, MPI_INT, MPI_LOR, MPI_COMM_WORLD);
-        swapSign = swapBuf;
-        sortSign = !sortSign;
-    }
-    MPI_Barrier(MPI_COMM_WORLD);
+### Methods of Moving Objects Detection
 
-    if (rank != 0) {
-        MPI_Send(subArray, subArraySize, MPI_INT, 0, 3, MPI_COMM_WORLD);
-    }
-    else {
-        int subBuf[mainArraySize - (size - 1) * (subArraySize - 1)];
-        for (int i = 0; i < subArraySize-1; i++) {
-            mainArray[i] = subArray[i];
-        }
-        for (int i = 1; i < size-1; i++) {
-            MPI_Recv(subArray, subArraySize, MPI_INT, i, 3, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-            for (int j = 0; j < subArraySize-1; j++) {
-                mainArray[j+i*(subArraySize - 1)] = subArray[j];
-            }
-        }
-        MPI_Recv(subBuf, mainArraySize - (size - 1) * (subArraySize - 1), MPI_INT, size-1, 3, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-        for (int j = 0; j < mainArraySize - (size - 1) * (subArraySize - 1); j++) {
-            mainArray[j+(size-1)*(subArraySize - 1)] = subBuf[j];
-        }
-        end_time = MPI_Wtime();
-        for (int i = 0; i < mainArraySize; i++) {
-            std::cout << mainArray[i] << " " ;
-        }
-        std::cout << "\n";
+#### Traditional Methods
 
-        // auther declaration
-        printf("Name: Zeng Lewei\n");
-        printf("student ID: 117010366\n");
-        printf("Assignment 1: Parallel Odd-Even Transposition Sort\n");
-        printf("Execute time: %.2lf seconds\n", end_time - start_time);
-    }
+Among all the traditional moving object detection methods, we could categorize them into four major approaches: Background subtraction, Frame differencing, Temporal Differencing, and Optical Flow.
 
-    MPI_Finalize();
+##### Frame Differencing
 
-	return 0;
-}   
-```
+Instead of using traditional approach, to use image subtraction operator by subtracting second and images afterwards, frame differencing method make comparisons between two successive frames to detect moving targets.
 
+##### Temporal Differencing
+
+Temporal differencing method identifies the moving object by applying pixel-wise difference method with two or three consecutive frames.
