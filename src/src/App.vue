@@ -55,7 +55,7 @@ a {
 .slide-left-enter-active,
 .slide-left-leave-active {
     will-change: transform;
-    transition: all .3s cubic-bezier(0.1, 0.7, 1.0, 0.1);
+    transition: all 1s;
     position: absolute;
     width:100%;
     left:0;

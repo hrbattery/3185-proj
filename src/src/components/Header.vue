@@ -1,5 +1,5 @@
 <template>
-  <v-toolbar max-height="64px">
+  <v-app-bar max-height="64px" app>
     <!-- <v-app-bar-nav-icon></v-app-bar-nav-icon> -->
     <!--v-toolbar-title><router-link to="/">Home Page</router-link></v-toolbar-title-->
     <v-toolbar-title>
@@ -22,7 +22,7 @@
     <v-btn icon>
         <v-icon @click="darkModeTrigger">mdi-theme-light-dark</v-icon>
     </v-btn>
-  </v-toolbar>
+  </v-app-bar>
 </template>
 
 <script>

@@ -3,6 +3,17 @@
     <Header/>
 
     <v-main>
+      <v-fab-transition>
+      <v-btn
+        fab
+        fixed
+        bottom
+        right
+        class="v-btn--example"
+      >
+        <v-icon>mdi-volume-high</v-icon>
+      </v-btn>
+      </v-fab-transition>
       <v-container>
         <div class="text-start">
           <h1>Moving object detection</h1>
@@ -101,6 +112,7 @@
           <p>Temporal differencing method identifies the moving object by applying pixel-wise difference method with two or three consecutive frames.</p>
         </div>
       </v-container>
+      
     </v-main>
   </v-app>
 </template>
@@ -139,3 +151,10 @@
     }
   }
 </script>
+
+<style>
+.v-btn--example {
+  bottom: 0;
+  margin: 0 0 16px 16px;
+}
+</style>

@@ -39,7 +39,7 @@ const routers = [
         component: Page2,
         meta:{
             title:'Introduction',
-            index:1
+            index:2
         }
     },
     {
@@ -48,7 +48,7 @@ const routers = [
         component: Page3,
         meta:{
             title:'Introduction',
-            index:1
+            index:3
         }
     },
     {
@@ -57,7 +57,7 @@ const routers = [
         component: Page4,
         meta:{
             title:'Introduction',
-            index:1
+            index:4
         }
     },
     {
@@ -66,7 +66,7 @@ const routers = [
         component: About,
         meta:{
             title:'Introduction',
-            index:1
+            index:5
         }
     }
 ]
