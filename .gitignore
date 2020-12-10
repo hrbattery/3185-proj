@@ -3,4 +3,4 @@
 /src/.vscode/*
 /src/.DS_Store
 .vscode/launch.json
-./src/dist/*
+/src/dist/*
