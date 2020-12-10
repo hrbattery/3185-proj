@@ -39,14 +39,14 @@
         <img src="../assets/images/Image Inpainting.jpg">
         <p>Figure 1. kinds of images inpainting</p>
         <br>
-        <img src="../assets/images/修复前.png" width="200" height="320">
-        <img src="../assets/images/修复后.png" width="200" height="320">
+        <img src="../assets/images/修复前.jpg" width="200" height="320">
+        <img src="../assets/images/修复后.jpg" width="200" height="320">
         
        <h2 id="techniques"> 2.Techniques of Image Restoration</h2>
         
             
         
-          <img src="../assets/images/新的.png" >
+          <img src="../assets/images/新的.jpg" >
 
           <h4>2.1Sequential-Based Methods</h4>
           <p>Approaches related to images inpainting can be classified into two categories: patch-based
@@ -92,7 +92,7 @@
                     Helmholtz equation is used for inpainting images in [40], after the inpainting of the missed
                     region the authors proposed a method for enhancing the quality of the images.</p>
                     <p>
-                        <img src="../assets/images/CNN网络结构.png" width="800" height="300"> <br>
+                        <img src="../assets/images/CNN网络结构.jpg" width="800" height="300"> <br>
                         Diffusion-based methods fill in the missing region (i.e. hole), by smoothly propagating
                         image content from the boundary to the interior of the missing region. For that, Li et al.
                         [41] proposed a diffusion-based method for image inpainting by localizing the diffusion of
@@ -241,7 +241,7 @@
             <p>Technique 3 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</p>
             <p>Technique 4 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</p>
 
-        <img src="../assets/images/最后一张.png" width="580" height="320">
+        <img src="../assets/images/最后一张.jpg" width="580" height="320">
 
 
         <h2 id="example">4.example of Image Inpainting</h2>

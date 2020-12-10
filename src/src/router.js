@@ -1,4 +1,4 @@
-import Home from './pages/Home.vue'
+const Home = () => import('./pages/Home.vue')
 const Page1 = () => import('./pages/Page1.vue')
 const Page2 = () => import('./pages/Page2.vue')
 const Page3 = () => import('./pages/Page3.vue')
