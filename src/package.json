@@ -10,6 +10,7 @@
   "dependencies": {
     "axios": "^0.21.0",
     "babel-runtime": "^6.26.0",
+    "cnpm": "^6.1.1",
     "compression-webpack-plugin": "^6.1.1",
     "core-js": "^3.6.5",
     "raw-loader": "^4.0.2",

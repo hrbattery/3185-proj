@@ -39,14 +39,15 @@
           >
             <router-link :to="`p${n}`">
             
-              <v-card :hover="true" @mouseover="mouseover(n)" @mouseleave="mouseleave()"> 
+              <v-card :hover="true" @mouseover="mouseover(n)" @mouseleave="mouseleave(n)"> 
                 <v-card-text>
                   {{headerTitles[n-1]}}
                 </v-card-text>
                 <v-img
-                :src="require(`../assets/images/${headerTitles[n-1]}.jpg`)"
+                :src="imageURL[n-1]"
                 :aspect-ratio="16/9"
                 alt=""
+                ref="img"
                 ></v-img>
               </v-card>
             
@@ -70,10 +71,17 @@
           'Style Transfer',
           'Motion Detection'
         ],
+        imageURL: [
+          require("../assets/images/Introduction.jpg"),
+          require("../assets/images/Image Inpainting.jpg"),
+          require("../assets/images/Style Transfer.jpg"),
+          require("../assets/images/Motion Detection.jpg")
+        ],
         displayBackground: false,
         backgroundStyle: {
           backgroundImage:""
         },
+        test:{},
       }
     }, 
     methods: {
@@ -83,9 +91,15 @@
       mouseover(n) {
         this.$data.backgroundStyle.backgroundImage = 'url('+encodeURI(require(`../assets/images/${this.$data.headerTitles[n-1]}.jpg`))+')'
         this.$data.displayBackground = true
+        if (n != 1) {
+          this.$data.imageURL[n-1] = require("../assets/images/"+this.$data.headerTitles[n-1]+".gif");
+        }
       },
-      mouseleave() {
+      mouseleave(n) {
         this.$data.displayBackground = false
+        if (n != 1) {
+          this.$data.imageURL[n-1] = require("../assets/images/"+this.$data.headerTitles[n-1]+".jpg");
+        }
       }
     },
     components: {
