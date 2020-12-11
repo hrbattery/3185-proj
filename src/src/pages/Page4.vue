@@ -1,6 +1,6 @@
 <template>
   <v-app id="inspire">
-    <Header/>
+    <Header @enable-sidebar="isOpeningSidebar=true"/>
 
     <v-main>
       <v-fab-transition>
@@ -10,11 +10,37 @@
         bottom
         right
         class="v-btn--example"
+        @click="playVoice"
       >
-        <v-icon>mdi-volume-high</v-icon>
+        <v-icon>{{voiceIcon}}</v-icon>
       </v-btn>
       </v-fab-transition>
       <v-container>
+        <!-- Sidebar drawer-->
+        <v-navigation-drawer
+          v-model="isOpeningSidebar"
+          absolute
+          right
+          temporary
+        >
+          <v-list-item>
+            <v-list-item-content>
+              <v-list-item-title>Choose accent</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+          <v-divider></v-divider>
+          <v-list>
+            <v-list-item
+              v-for="n in accents.length"
+              :key="n"
+              @click="handleAccent(n)"
+            >
+            {{accentNames[n-1]}}
+            </v-list-item>
+          </v-list>
+
+        </v-navigation-drawer>
+
         <div class="text-start">
           <h1>Moving object detection</h1>
           <p>Moving object detection is a technique used in computer vision and image processing. Multiple consecutive frames from a video are compared by various methods to determine if any moving object is detected.</p>
@@ -119,10 +145,9 @@
 
 <script>
   import Header from '@/components/Header'
-  // import markdown from '@/assets/Assignment1.md'
-  // import MarkdownItVue from 'markdown-it-vue'
-  // import 'markdown-it-vue/dist/markdown-it-vue.css'
-
+  const synth = window.speechSynthesis;
+  const msg = new SpeechSynthesisUtterance();
+  import text from '!raw-loader!../assets/4.txt';
 
   export default {
     data() {
@@ -133,12 +158,63 @@
           'Page3',
           'Page4'
         ],
-        // markdown,
+        accents: [
+          'en-GB',
+          'en-US',
+          'en-CA',
+          'en-IN',
+          'en-AU',
+          'en-NZ',
+          'en-ZA',
+        ],
+        accentNames: [
+          'British',
+          'American',
+          'Canadian',
+          'Indian',
+          'Australian',
+          'New Zealand',
+          'South African',
+        ],
+        isReading: false,
+        isOpeningSidebar: false,
+        msgConfig: {
+          text: text,
+          lang: "en-GB",
+          volume: 1,
+          rate: 1,
+          pitch: 1, 
+        },
+        voiceIcon: "mdi-account-tie-voice"
       }
     },
     methods: {
-      test() {
-        // this.$refs.cards["1"].text = "Topic 1";
+      playVoice() {
+        if (this.$data.isReading) {
+          this.$data.voiceIcon = "mdi-account-tie-voice"
+          this.handleStop();
+        }
+        else {
+          this.$data.voiceIcon = "mdi-account-tie-voice-off"
+          this.handleSpeak();
+        }
+        this.$data.isReading = !this.$data.isReading
+      },
+      handleAccent(n) {
+        this.$data.msgConfig.lang = this.$data.accents[n-1];
+        this.$data.isOpeningSidebar = false;
+      },
+      handleSpeak() {
+        let config = this.$data.msgConfig;
+        msg.text = config.text;
+        msg.lang = config.lang;
+        msg.voice = config.voice;
+        msg.volume = config.volume;
+        msg.pitch = config.pitch;
+        synth.speak(msg);
+      },
+      handleStop() {
+        synth.cancel(msg);
       }
     },
     components: {

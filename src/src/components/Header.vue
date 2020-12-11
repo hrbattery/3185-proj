@@ -15,6 +15,9 @@
     </v-toolbar-items>
     <v-spacer></v-spacer>
     <v-btn icon>
+        <v-icon @click.stop="$emit('enable-sidebar')">mdi-cog</v-icon>
+    </v-btn>
+    <v-btn icon>
       <router-link to="about">
         <v-icon>mdi-information</v-icon>
       </router-link>

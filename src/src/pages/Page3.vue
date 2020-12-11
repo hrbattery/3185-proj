@@ -9,10 +9,10 @@
       <h1>
             Introduction
         </h1>
-        <p>
+        <p class="color"> 
             Style transfer is a computer vision technique that allows us to recompose the content of an image in the style of another. If you’ve ever imagined what a photo might look like if it were painted by a famous artist, then style transfer is the computer vision technique that turns this into a reality.
         </p>
-        <p><img src="https://www.fritz.ai/images/fritz_style_transfer_multiples.jpg" width="450" height="450"/></p>
+        <img src="https://www.fritz.ai/images/fritz_style_transfer_multiples.jpg" width="450" height="450" style="margin:0 auto;"/>
         <p>
             You may have a try on the following website(It may cost you 2-5 minutes to wait for the result from this website, please be patient):
         </p>
@@ -284,3 +284,9 @@
     }
   }
 </script>
+
+<style>
+.color {
+    color:blue;
+}
+</style>
