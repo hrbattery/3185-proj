@@ -1,9 +1,60 @@
 <template>
   <v-app id="inspire">
-    <Header/>
+    <Header @enable-sidebar="isOpeningSidebar=true"/>
 
     <v-main>
+      <div ref="top"></div>
+      <v-fab-transition>
+      <v-btn
+        fab
+        fixed
+        bottom
+        left
+        class="v-btn--example"
+        @click="playVoice"
+      >
+        <v-icon>{{voiceIcon}}</v-icon>
+      </v-btn>
+      </v-fab-transition>
+      <v-fab-transition>
+      <v-btn
+        fab
+        fixed
+        bottom
+        right
+        class="v-btn--example"
+        @click="backToTop"
+        v-if = "showTop"
+      >
+        <v-icon>mdi-arrow-up-bold</v-icon>
+      </v-btn>
+      </v-fab-transition>
       <v-container>
+      <!-- Sidebar drawer-->
+        <v-navigation-drawer
+          v-model="isOpeningSidebar"
+          absolute
+          right
+          temporary
+        >
+          <v-list-item>
+            <v-list-item-content>
+              <v-list-item-title>Choose accent</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+          <v-divider></v-divider>
+          <v-list>
+            <v-list-item
+              v-for="n in accents.length"
+              :key="n"
+              @click="handleAccent(n)"
+            >
+            {{accentNames[n-1]}}
+            </v-list-item>
+          </v-list>
+
+        </v-navigation-drawer>
+
       <div class="text-start">
       <h1>Neural Style Transfer</h1>
       <h1>
@@ -264,6 +315,10 @@
 
 <script>
   import Header from '@/components/Header'
+  const synth = window.speechSynthesis;
+  const msg = new SpeechSynthesisUtterance();
+  import text from '!raw-loader!../assets/3.txt';
+
   export default {
     data() {
       return {
@@ -272,20 +327,98 @@
           'Page2',
           'Page3',
           'Page4'
-        ]
+        ],
+        accents: [
+          'en-GB',
+          'en-US',
+          'en-CA',
+          'en-IN',
+          'en-AU',
+          'en-NZ',
+          'en-ZA',
+        ],
+        accentNames: [
+          'British',
+          'American',
+          'Canadian',
+          'Indian',
+          'Australian',
+          'New Zealand',
+          'South African',
+        ],
+        isReading: false,
+        isOpeningSidebar: false,
+        msgConfig: {
+          text: text,
+          lang: "en-GB",
+          volume: 1,
+          rate: 1,
+          pitch: 1, 
+        },
+        voiceIcon: "mdi-account-tie-voice",
+        showTop: false
       }
     },
     methods: {
-      test() {
-        // this.$refs.cards["1"].text = "Topic 1";
+      playVoice() {
+        if (this.$data.isReading) {
+          this.$data.voiceIcon = "mdi-account-tie-voice"
+          this.handleStop();
+        }
+        else {
+          this.$data.voiceIcon = "mdi-account-tie-voice-off"
+          this.handleSpeak();
+        }
+        this.$data.isReading = !this.$data.isReading
+      },
+      handleAccent(n) {
+        this.$data.msgConfig.lang = this.$data.accents[n-1];
+        this.$data.isOpeningSidebar = false;
+      },
+      handleSpeak() {
+        let config = this.$data.msgConfig;
+        msg.text = config.text;
+        msg.lang = config.lang;
+        msg.voice = config.voice;
+        msg.volume = config.volume;
+        msg.pitch = config.pitch;
+        synth.speak(msg);
+      },
+      handleStop() {
+        synth.cancel(msg);
+      },
+      scrollToTop() { 
+        var scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop;
+        let browserHeight = window.outerHeight;
+        if (scrollTop > browserHeight) {
+          this.$data.showTop = true
+        } else {
+          this.$data.showTop = false
+        }
+      },
+      backToTop() {
+        this.$refs.top.scrollIntoView({behavior: "smooth"});
       }
     },
     components: {
       Header,
+      // MarkdownItVue
     },
     mounted () {
-      // console.log(this.$refs.cards['1'])
-      // this.$refs.cards["1"].text = "Topic 1";
+      window.addEventListener('scroll', this.scrollToTop)
     }
   }
 </script>
+
+<style>
+.v-btn--example {
+  bottom: 0;
+  margin: 0 0 16px 16px;
+}
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .5s;
+}
+.fade-enter, .fade-leave-to{
+  opacity: 0;
+}
+</style>
