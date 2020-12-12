@@ -3,6 +3,19 @@
     <Header @enable-sidebar="isOpeningSidebar=true"/>
 
     <v-main>
+      <div ref="top"></div>
+      <v-fab-transition>
+      <v-btn
+        fab
+        fixed
+        bottom
+        left
+        class="v-btn--example"
+        @click="playVoice"
+      >
+        <v-icon>{{voiceIcon}}</v-icon>
+      </v-btn>
+      </v-fab-transition>
       <v-fab-transition>
       <v-btn
         fab
@@ -10,9 +23,10 @@
         bottom
         right
         class="v-btn--example"
-        @click="playVoice"
+        @click="backToTop"
+        v-if = "showTop"
       >
-        <v-icon>{{voiceIcon}}</v-icon>
+        <v-icon>mdi-arrow-up-bold</v-icon>
       </v-btn>
       </v-fab-transition>
       <v-container>
@@ -185,7 +199,8 @@
           rate: 1,
           pitch: 1, 
         },
-        voiceIcon: "mdi-account-tie-voice"
+        voiceIcon: "mdi-account-tie-voice",
+        showTop: false
       }
     },
     methods: {
@@ -215,6 +230,18 @@
       },
       handleStop() {
         synth.cancel(msg);
+      },
+      scrollToTop() { 
+        var scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop;
+        let browserHeight = window.outerHeight;
+        if (scrollTop > browserHeight) {
+          this.$data.showTop = true
+        } else {
+          this.$data.showTop = false
+        }
+      },
+      backToTop() {
+        this.$refs.top.scrollIntoView({behavior: "smooth"});
       }
     },
     components: {
@@ -222,8 +249,7 @@
       // MarkdownItVue
     },
     mounted () {
-      // console.log(this.$refs.cards['1'])
-      // this.$refs.cards["1"].text = "Topic 1";
+      window.addEventListener('scroll', this.scrollToTop)
     }
   }
 </script>
@@ -232,5 +258,11 @@
 .v-btn--example {
   bottom: 0;
   margin: 0 0 16px 16px;
+}
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .5s;
+}
+.fade-enter, .fade-leave-to{
+  opacity: 0;
 }
 </style>
