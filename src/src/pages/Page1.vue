@@ -62,7 +62,7 @@
           <h1>Introduction</h1>
           <p>Computer vision is an interdisciplinary field that deals with how computers can be made to gain high-level understanding from digital images or videos. From the perspective of engineering, it seeks to automate tasks that the human visual system can do. &quot;Computer vision is concerned with the automatic extraction, analysis and understanding of useful information from a single image or a sequence of images. It involves the development of a theoretical and algorithmic basis to achieve automatic visual understanding.&quot; As a scientific discipline, computer vision is concerned with the theory behind artificial systems that extract information from images. The image data can take many forms, such as video sequences, views from multiple cameras, or multi-dimensional data from a medical scanner. As a technological discipline, computer vision seeks to apply its theories and models for the construction of computer vision systems.</p>
           <p> </p>
-          <p><img src="https://3qeqpr26caki16dnhd19sv6by6v-wpengine.netdna-ssl.com/wp-content/uploads/2019/03/Computer-Vision.png" referrerpolicy="no-referrer" alt="img"> </p>
+          <p><img :src="require('../assets/images/ComputerVision.png')" referrerpolicy="no-referrer" alt="img"> </p>
           <p> </p>
           <h3>History:</h3>
           <p>In the late 1960s, computer vision began at universities which were pioneering artificial intelligence. It was meant to mimic the human visual system, as a stepping stone to endowing robots with intelligent behavior. In 1966, it was believed that this could be achieved through a summer project, by attaching a camera to a computer and having it &quot;describe what it saw&quot;.</p>

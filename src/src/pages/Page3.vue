@@ -65,7 +65,7 @@
         </p>
         <p><img src="../assets/images/Style1.png" width="100%" height="100%"/></p>
         <p>
-            <em>You may have a try on the following website(It may cost you 2-5 minutes to wait for the result from this website, please be patient):</em>
+            <em>You may have a try on the following website:</em>
         </p>
         <iframe src="https://demo.aizoo.com/style-transfer.html" name="f" width="100%" height=800></iframe>
         <p>
@@ -135,7 +135,7 @@
 
             And with the continued improvement of AI-accelerated hardware, both in the cloud and on the edge, style transfer can now be applied to captured and live video. This new capability opens up endless doors in design, content generation, and the development of creativity tools.
 
-            Given this evolution, we can see how style transfer can be applied in a number of ways:
+            Given this evolution, we can see how style transfer can be applied in a number of ways:<br>
 
             (1)Photo and video editors<br>
             (2)Artist-Community engagement<br>
