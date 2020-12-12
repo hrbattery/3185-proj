@@ -31,6 +31,12 @@ module.exports = {
       .test(/.md$/)
       .use('markdown-loader')
       .loader('markdown-loader')
-      .loader('text-loader')
+      .loader('text-loader');
+    config
+      .plugin('html')
+      .tap(args => {
+        args[0].title= 'Introduction to Computer Vision'
+        return args
+      })
   }
 }
