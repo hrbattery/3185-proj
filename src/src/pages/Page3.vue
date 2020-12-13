@@ -63,7 +63,7 @@
         <p>
             <b>Style transfer is a computer vision technique that allows us to recompose the content of an image in the style of another. If you've ever imagined what a photo might look like if it were painted by a famous artist, then style transfer is the computer vision technique that turns this into a reality.</b>
         </p>
-        <p><img src="../assets/images/Style1.png" width="100%" height="100%"/></p>
+        <p><img src="../assets/images/Style1.jpg" width="100%" height="100%"/></p>
         <p>
             <em>You may have a try on the following website:</em>
         </p>
@@ -420,5 +420,8 @@
 }
 .fade-enter, .fade-leave-to{
   opacity: 0;
+}
+h1,h2,h3,h4,h5,h6,p {
+  margin-bottom: 6px;
 }
 </style>
