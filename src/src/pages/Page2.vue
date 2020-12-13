@@ -32,7 +32,7 @@
       <v-container>
         <v-navigation-drawer
           v-model="isOpeningSidebar"
-          absolute
+          app
           right
           temporary
         >

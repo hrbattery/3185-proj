@@ -1,7 +1,29 @@
 <template>
   <v-app id="inspire">
     <Header @enable-sidebar="isOpeningSidebar=true"/>
+    <v-navigation-drawer
+      v-model="isOpeningSidebar"
+      app
+      right
+      temporary
+    >
+      <v-list-item>
+        <v-list-item-content>
+          <v-list-item-title>Choose accent</v-list-item-title>
+        </v-list-item-content>
+      </v-list-item>
+      <v-divider></v-divider>
+      <v-list>
+        <v-list-item
+          v-for="n in accents.length"
+          :key="n"
+          @click="handleAccent(n)"
+        >
+        {{accentNames[n-1]}}
+        </v-list-item>
+      </v-list>
 
+    </v-navigation-drawer>
     <v-main>
       <div ref="top"></div>
       <v-fab-transition>
@@ -31,29 +53,6 @@
       </v-fab-transition>
       <v-container>
         <!-- Sidebar drawer-->
-        <v-navigation-drawer
-          v-model="isOpeningSidebar"
-          absolute
-          right
-          temporary
-        >
-          <v-list-item>
-            <v-list-item-content>
-              <v-list-item-title>Choose accent</v-list-item-title>
-            </v-list-item-content>
-          </v-list-item>
-          <v-divider></v-divider>
-          <v-list>
-            <v-list-item
-              v-for="n in accents.length"
-              :key="n"
-              @click="handleAccent(n)"
-            >
-            {{accentNames[n-1]}}
-            </v-list-item>
-          </v-list>
-
-        </v-navigation-drawer>
 
         <div class="text-start">
           <h1>Moving object detection</h1>

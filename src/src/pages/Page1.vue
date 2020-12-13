@@ -33,7 +33,7 @@
 <!-- Sidebar drawer-->
         <v-navigation-drawer
           v-model="isOpeningSidebar"
-          absolute
+          app
           right
           temporary
         >
